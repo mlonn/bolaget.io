@@ -1,46 +1,17 @@
 sudo: required
 
-services:
-  - docker
-
 cache:
   directories:
     - "$HOME/google-cloud-sdk/"
-    - node_modules
 
 env:
   global:
-    - DOCKER_COMPOSE_VERSION=1.8.0
     - PROJECT_NAME=brynn-145714
     - CLUSTER_NAME=cluster-1
     - CLOUDSDK_COMPUTE_ZONE=europe-west1-b
-    - DOCKER_IMAGE_NAME=bolagetio
     - K8S_NAMESPACE=bolagetio
-    - K8S_DEPLOYMENT_NAME_WEB=web
-    - K8S_DEPLOYMENT_NAME_NGINX=nginx
-    - COMMIT=${TRAVIS_COMMIT::7}
 
-before_install:
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname
-    -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-
-install:
-  - docker-compose build
-
-script:
-  - docker-compose up -d elastic
-  - sleep 10
-  - docker-compose run test
-
-deploy:
-  - provider: script
-    script: ./devops/script/deploy.sh
-    skip_cleanup: true
-    on:
-      branch: master
+script: ./run.sh
 
 notifications:
   email: false
